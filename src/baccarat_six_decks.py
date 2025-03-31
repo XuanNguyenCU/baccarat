@@ -60,7 +60,7 @@ def repCount(hand):
     return count
 
 
-def calculateOdds():
+def calculate_odds():
     counts = {'player': 0, 'banker': 0, 'tie': 0}
     for hand in uniqueHands:
         result = outcome(hand)
@@ -112,6 +112,8 @@ def final_sums(hand):
 
 def bankerWinsBreakdown():
     breakdown = defaultdict(int)
+    counts = calculate_odds()
+    total = sum(counts.values())
 
     for hand in uniqueHands:
         pSum, bSum = final_sums(hand)
@@ -128,22 +130,22 @@ def bankerWinsBreakdown():
         for pSum in range(bSum):
             sum_for_bSum += breakdown[(bSum, pSum)]
         if sum_for_bSum > 0:
-            print(f"\n=== Banker final sum: {bSum} ===")
+            print(f"\n=== Banker final point sum {bSum} ===")
             for pSum in range(bSum):
                 count = breakdown[(bSum, pSum)]
                 if count > 0:
-                    print(f"  vs. Player {pSum}: {count:,} ways")
+                    print(f"  vs. Player {pSum}: {count:,} ways ({count / total:.4%})")
 
     return breakdown
 
 
 def main():
     bankerWinsBreakdown()
-    counts = calculateOdds()
+    counts = calculate_odds()
     player_winning_num = counts['player']
     banker_winning_num = counts['banker']
     tie_num = counts['tie']
-    total = player_winning_num + banker_winning_num + tie_num
+    total = sum(counts.values())
     print()
     print(f"Total ways Player can win: {player_winning_num:,}")
     print(f"Total ways for a tie: {tie_num:,}")
