@@ -13,10 +13,12 @@ deckFrequency = [96, 24, 24, 24, 24, 24, 24, 24, 24, 24]
 uniqueHands = list(itertools.product(deck, repeat=6))
 
 
+# Adding points
 def add(cardOne, cardTwo):
     return (cardOne + cardTwo) % 10
 
 
+# Determining who wins or if a tie occurs
 def outcome(hand):
     c1, c2, c3, c4, c5, c6 = hand
     playerSum = add(c1, c2)
@@ -52,6 +54,10 @@ def outcome(hand):
 
 
 def repCount(hand):
+    """
+    Given a 6-card value tuple (e.g. (0, 3, 7, 2, 8, 9)),
+    returns how many distinct ways there are to draw that exact sequence of values from the shoe.
+    """
     copyFreq = deckFrequency.copy()
     count = 1
     for c in hand:
@@ -60,6 +66,7 @@ def repCount(hand):
     return count
 
 
+# Determining the total number of ways for Player winning, Banker winning, and tie
 def calculate_odds():
     counts = {'player': 0, 'banker': 0, 'tie': 0}
     for hand in uniqueHands:
@@ -75,10 +82,6 @@ def final_sums(hand):
     return (final_player_sum, final_banker_sum) under standard Baccarat drawing rules.
     """
     c1, c2, c3, c4, c5, c6 = hand
-
-    # Simple modular add
-    def add(cardOne, cardTwo):
-        return (cardOne + cardTwo) % 10
 
     # Initial 2-card sums
     playerSum = add(c1, c2)
@@ -111,6 +114,12 @@ def final_sums(hand):
 
 
 def bankerWinsBreakdown():
+    """
+    Returns a dictionary keyed by (bankerSum, playerSum) with the number of ways the Banker can end up with that final sum
+    while beating the Player's sum (bankerSum > playerSum).
+
+    Also prints a summary of the total ways the Banker can win, grouped by Banker’s final sum.
+    """
     breakdown = defaultdict(int)
     counts = calculate_odds()
     total = sum(counts.values())
@@ -130,12 +139,11 @@ def bankerWinsBreakdown():
         for pSum in range(bSum):
             sum_for_bSum += breakdown[(bSum, pSum)]
         if sum_for_bSum > 0:
-            print(f"\n=== Banker final point sum {bSum} ===")
+            print(f"\n=== Banker final point {bSum} ===")
             for pSum in range(bSum):
                 count = breakdown[(bSum, pSum)]
                 if count > 0:
-                    print(f"  vs. Player {pSum}: {count:,} ways ({count / total:.4%})")
-
+                    print(f"  vs. Player final point {pSum}: {count:,} ways ({count / total:.4%})")
     return breakdown
 
 
