@@ -133,21 +133,25 @@ Total ways Banker can win: 403,095,751,234,560
 
 === Banker final point 1 ===
   vs. Player final point 0: 4,264,128,824,832 ways (0.4852%)
+  Total ways of Banker winning with 1 point: 4,264,128,824,832 ways (0.4852%)
 
 === Banker final point 2 ===
   vs. Player final point 0: 4,245,546,825,216 ways (0.4831%)
   vs. Player final point 1: 3,597,643,123,200 ways (0.4093%)
+  Total ways of Banker winning with 2 points: 7,843,189,948,416 ways (0.8924%)
 
 === Banker final point 3 ===
   vs. Player final point 0: 4,733,871,681,024 ways (0.5386%)
   vs. Player final point 1: 4,083,234,977,664 ways (0.4646%)
   vs. Player final point 2: 4,003,057,580,544 ways (0.4555%)
+  Total ways of Banker winning with 3 points: 12,820,164,239,232 ways (1.4587%)
 
 === Banker final point 4 ===
   vs. Player final point 0: 8,079,496,680,960 ways (0.9193%)
   vs. Player final point 1: 7,140,240,693,504 ways (0.8124%)
   vs. Player final point 2: 6,779,319,856,128 ways (0.7714%)
   vs. Player final point 3: 6,707,806,239,744 ways (0.7632%)
+  Total ways of Banker winning with 4 points: 28,706,863,470,336 ways (3.2663%)
 
 === Banker final point 5 ===
   vs. Player final point 0: 8,111,994,292,224 ways (0.9230%)
@@ -155,6 +159,7 @@ Total ways Banker can win: 403,095,751,234,560
   vs. Player final point 2: 7,546,967,891,712 ways (0.8587%)
   vs. Player final point 3: 7,942,347,168,768 ways (0.9037%)
   vs. Player final point 4: 7,349,105,228,544 ways (0.8362%)
+  Total ways of Banker winning with 5 points: 38,128,872,750,336 ways (4.3384%)
 
 === Banker final point 6 ===
   vs. Player final point 0: 8,534,981,039,616 ways (0.9711%)
@@ -163,6 +168,7 @@ Total ways Banker can win: 403,095,751,234,560
   vs. Player final point 3: 7,911,355,506,048 ways (0.9002%)
   vs. Player final point 4: 8,048,708,547,840 ways (0.9158%)
   vs. Player final point 5: 8,166,265,159,680 ways (0.9292%)
+  Total ways of Banker winning with 6 points: 47,322,230,031,360 ways (5.3844%)
 
 === Banker final point 7 ===
   vs. Player final point 0: 9,500,595,038,208 ways (1.0810%)
@@ -172,6 +178,7 @@ Total ways Banker can win: 403,095,751,234,560
   vs. Player final point 4: 8,089,432,326,144 ways (0.9204%)
   vs. Player final point 5: 8,207,240,161,536 ways (0.9338%)
   vs. Player final point 6: 17,742,879,436,032 ways (2.0188%)
+  Total ways of Banker winning with 7 points: 67,608,812,078,208 ways (7.6927%)
 
 === Banker final point 8 ===
   vs. Player final point 0: 14,936,001,431,040 ways (1.6995%)
@@ -182,6 +189,7 @@ Total ways Banker can win: 403,095,751,234,560
   vs. Player final point 5: 10,260,972,986,112 ways (1.1675%)
   vs. Player final point 6: 13,700,396,749,824 ways (1.5589%)
   vs. Player final point 7: 13,904,546,379,264 ways (1.5821%)
+  Total ways of Banker winning with 8 points: 93,145,507,893,504 ways (10.5983%)
 
 === Banker final point 9 ===
   vs. Player final point 0: 15,000,473,136,384 ways (1.7068%)
@@ -193,6 +201,7 @@ Total ways Banker can win: 403,095,751,234,560
   vs. Player final point 6: 13,755,518,161,920 ways (1.5651%)
   vs. Player final point 7: 13,961,821,697,280 ways (1.5886%)
   vs. Player final point 8: 9,722,219,136,768 ways (1.1062%)
+  Total ways of Banker winning with 9 points: 103,255,981,998,336 ways (11.7487%)
 
 Total ways Player can win: 392,220,492,728,832
 Total ways for a tie: 83,552,962,932,288
