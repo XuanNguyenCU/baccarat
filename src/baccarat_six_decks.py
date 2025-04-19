@@ -140,10 +140,13 @@ def bankerWinsBreakdown():
             sum_for_bSum += breakdown[(bSum, pSum)]
         if sum_for_bSum > 0:
             print(f"\n=== Banker final point {bSum} ===")
+            tcount = 0
             for pSum in range(bSum):
                 count = breakdown[(bSum, pSum)]
                 if count > 0:
+                    tcount += count
                     print(f"  vs. Player final point {pSum}: {count:,} ways ({count / total:.4%})")
+            print(f"  Total ways of Banker winning with {bSum} points: {tcount:,} ways ({tcount / total:.4%})")
     return breakdown
 
 
