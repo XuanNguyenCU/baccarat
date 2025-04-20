@@ -1,6 +1,6 @@
 # Baccarat (6 Decks)
 
-Under the `src` folder, there is a `baccarat_six_decks.py`   file that calculates the probabilities that Banker wins with 6 points, Banker wins with other points, Player wins, and a Tie in the the game Baccarat using six decks.
+Under the `src` folder, there is a `baccarat.py` file that calculates the probabilities that Banker wins with 6 points, Banker wins with other points, Player wins, and a Tie in the game Baccarat for N-deck shoes (default 6 decks)
 
 ---
 
@@ -8,132 +8,106 @@ Under the `src` folder, there is a `baccarat_six_decks.py`   file that calculate
 1. [Overview](#overview)  
 2. [Data Structures](#data-structures)  
 3. [Helper Functions](#helper-functions)  
-4. [\`bankerWinsBreakdown\` Function](#bankerwinsbreakdown-function)  
-5. [Final Probabilities](#final-probabilities)  
+4. [Final Probabilities](#final-probabilities)  
+
+---
+
+## Authors
+
+- Jerick Liu (@jerickliu)
+- Omar Khattab (@okhat1)
+- Xuan Nguyen (@XuanNguyenCU)
 
 ---
 
 ## Overview
 
-This program analyzes Baccarat outcomes using **six decks** of standard playing cards. We define:
+This program performs an **exact-enumeration** of all possible Baccarat hands in a **six-deck shoe**. It computes:
 
-- **Card values** in Baccarat: 
-  - 10, J, Q, K are collectively considered “0 points.”  
-  - Aces and 2–9 have face values 1 through 9, respectively.  
-- **Deck frequency**: for 6 decks, there are 
-  - \(6 * 4 * 4 = 96\) cards that are 0 points (10/J/Q/K),  
-  - \(6 * 4 = 24\) cards for each of 1–9.  
+- Player win  
+- Banker win (with total = 6)  
+- Banker win (with total ≠ 6)  
+- Tie  
 
-To simulate the dealing of a Baccarat hand, we consider permutations of length 6 (the maximum needed in dealing a full hand with possible third cards). We then count how many representations (ways to deal) each permutation has, based on how many times each value is available in the combined 6 decks.
+Drawing rules and card frequencies are modeled precisely according to standard Baccarat.
 
 ---
 
 ## Data Structures
 
-1. **\`deck\`:**  
-   ```python
-   deck = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-   ```
-   - We list each possible card *value* in Baccarat.  
-   - \`0\` stands for 10/J/Q/K cards; \`1\` stands for Ace, \`2\` for 2, and so on up to \`9\`.
+1. **`BANKER_DRAW_MAP`**  
+   A constant mapping from a Banker’s two-card total (0–9) to the set of Player third-card values that will cause the Banker to draw.
 
-2. **\`deckFrequency\`:**  
-   ```python
-   deckFrequency = [96, 24, 24, 24, 24, 24, 24, 24, 24, 24]
-   ```
-   - An array where the index corresponds to the card’s value and the stored integer is **how many copies** of that value exist in 6 decks.  
-   - Specifically:  
-     - deckFrequency[0] = 96 (the number of 10/J/Q/K cards).  
-     - deckFrequency[1] ... deckFrequency[9] = 24 each (A–9).
+2. **`Shoe` dataclass**  
+   Represents the composition of the shoe.  
+   - `num_decks`: number of 52-card decks.  
+   - `frequencies` property: returns a 10-tuple of counts for card values 0–9.
 
-3. **\`uniqueHands\`:**  
-   ```python
-   uniqueHands = list(itertools.product(deck, repeat=6))
-   ```
-   - Generate **all 6-length permutations (with replacement)** of the values 0..9.  
-   - Each element in `uniqueHands` is a tuple of 6 values, e.g. `(0, 3, 7, 0, 0, 2)`.
+3. **Calculator Attributes**  
+   - `deck`: tuple of card values, `tuple(range(10))`.  
+   - `deck_frequency`: obtained from `shoe.frequencies`, the counts for each value.  
+   - `counts`: dict tracking totals for `'player'`, `'banker'`, and `'tie'`.  
+   - `banker_breakdown`: defaultdict mapping `(banker_sum, player_sum)` → number of ways.  
+   - `total`: grand total of all valid sequences examined.
 
 ---
 
 ## Helper Functions
 
-### `add(cardOne, cardTwo)` Function
+### `_count_permutations_of_hand(hand)`  
+Calculates ordered ways to draw a specific 6-card tuple from the shoe using `math.perm` for each distinct card value, with results cached via `@lru_cache`.
 
-**Explanation**  
-1. **`add`** is a helper that sums two card values in **mod 10**.  
+```python
+# Counts ordered draws for a given hand tuple
+def _count_permutations_of_hand(self, hand: Tuple[int, ...]) -> int:
+    ...
+```
+  
+### `run_calculations()`  
+1. Enumerates all 6-tuples via `itertools.product(deck, repeat=6)`  
+2. For each hand:  
+   - Compute `ways` = `_count_permutations_of_hand(hand)`  
+   - Skip if `ways == 0`  
+   - Apply Baccarat drawing rules (mod 10 arithmetic + `BANKER_DRAW_MAP`)  
+   - Update `self.counts` and `self.banker_breakdown`  
+3. Store grand total in `self.total`.
 
+```python
+def run_calculations(self) -> None:
+    ...
+```
 
-### `outcome(hand)` Function
+### `print_results()`  
+Prints:  
+- Detailed Banker wins breakdown by final Banker total and losing Player totals.  
+- Grand totals of Banker wins, Player wins, ties, and overall sequences.  
+- Relative probabilities, including sub‑breakdown for Banker total = 6 vs. other.
 
-**Explanation**  
-1. Extract the cards from the 6-tuple.
-    - `c1, c2` → Player’s first two cards,
-    - `c4, c5` → Banker’s first two cards,
-    - `c3, c6` → Potential third cards for Player (c3) and Banker (c6).
-2. Compute initial sums using the helper `add` function (which sums values mod 10).
-3. Apply Baccarat’s drawing rules to see if the Player or Banker takes a third card.
-4. Compare final sums and return the outcome.
+```python
+def print_results(self) -> None:
+    ...
+```
 
+### `main()`  
+Instantiates `Shoe(num_decks=6)` and `BaccaratCalculator`, runs calculations, and prints results.
 
-### `repCount(hand)` Function
-
-**Explanation**  
-- Because our hand is something like \`(c1, c2, ..., c6)\) *by value*, we must figure out how many actual “real-world” ways can produce that specific combination of values.  
-- We copy the list of frequencies (so we don’t mutate the original).  
-- For each card value **c** in the hand, we:  
-  1. Multiply our running count by the number of remaining copies of **c** (e.g., if c=0, initially there might be 96 available).  
-  2. Decrement that copy’s availability by 1.  
-
-By the end of the loop, \`count\` is the total number of ways to draw that exact sequence of values from the shoe.
-
-
-### `calculate_odds()` Function
-
-**Explanation**  
-1. Initialize a dictionary `counts` to track totals for 'player', 'banker', and 'tie'.
-2. Iterate through all possible 6-card permutations stored in `uniqueHands`. Each hand is a 6-tuple of values (0 through 9).
-3. Use `outcome(hand)` to see who wins the hand: 'player', 'banker', or 'tie'.
-4. Use `repCount(hand)` to find out how many real-world combinations correspond to that particular 6-tuple of card values.
-5. Accumulate the counts into the `counts` dictionary.
-6. Return the dictionary that shows the total number of ways for each final outcome across all 6-card combinations.
-
-### `final_sums(hand)` Function
-
-**Explanation**  
-1. We destructure the 6-card “hand” into \`c1..c6\`.  
-2. We compute *initial* Player and Banker sums from their first two cards.  
-3. We apply Baccarat’s standard drawing rules:  
-   - If Player has exactly 6 or 7, the Player does NOT draw a third card. The Banker then draws only if the Banker’s sum is <= 5.  
-   - Otherwise, if Player has <= 5 while Banker has < 8, the Player draws a third card. The Banker’s draw depends on the value of the Player’s third card (c3).  
-4. The function returns **the final sums** (\`playerSum, bankerSum\`).
-
-
----
-
-## `bankerWinsBreakdown` Function
-
-**Explanation**  
-1. We use `defaultdict(int)` to map `(bankerSum, playerSum)` → **number of ways**.  
-2. For every 6-card combination in \`uniqueHands\`, we:  
-   - Get the final sums for Player and Banker using \`final_sums(hand)\`.  
-   - If \`bSum > pSum\`, the Banker “wins,” so we increment our dictionary entry by \`repCount(hand)\`.  
-3. We sum all the dictionary values to see how many total ways the Banker can win.  
-4. Finally, we print it out grouped by Banker’s final sum from 1..9.  
-5. The function returns the dictionary for further use or analysis.
+```python
+if __name__ == "__main__":
+    main()
+```
 
 ---
 
 ## Final Probabilities
+
 The program’s final sums can be verified against known theoretical results (also matches the results from https://wizardofodds.com/games/baccarat/calculator/ for the 6 decks composition).  
 
-This is the output when running the program `baccarat_six_decks.py`:
+This is the output when running the program `baccarat.py`:  
 
 ```
-Total ways Banker can win: 403,095,751,234,560
-
 === Banker final point 1 ===
   vs. Player final point 0: 4,264,128,824,832 ways (0.4852%)
-  Total ways of Banker winning with 1 point: 4,264,128,824,832 ways (0.4852%)
+  Total ways of Banker winning with 1 points: 4,264,128,824,832 ways (0.4852%)
 
 === Banker final point 2 ===
   vs. Player final point 0: 4,245,546,825,216 ways (0.4831%)
@@ -203,11 +177,15 @@ Total ways Banker can win: 403,095,751,234,560
   vs. Player final point 8: 9,722,219,136,768 ways (1.1062%)
   Total ways of Banker winning with 9 points: 103,255,981,998,336 ways (11.7487%)
 
-Total ways Player can win: 392,220,492,728,832
-Total ways for a tie: 83,552,962,932,288
-Total overall possibilities: 878,869,206,895,680
+With a shoe of 6...
+Total ways Banker can win:    403,095,751,234,560
+Total ways Player can win:    392,220,492,728,832
+Total ways for a tie:         83,552,962,932,288
+Total overall possibilities:  878,869,206,895,680
 
-Player has a 44.6279% chance of winning.
-Banker has a 45.8653% chance of winning.
-They have a 9.5069% chance of tieing.
+P(Player):                      44.6279%.
+P(Banker):                      45.8653%.
+  ↳ of which P(Banker @6):        5.3844%
+  ↳ of which P(Banker @other):    40.4808%
+P(Tie):                         9.5069%.
 ```
