@@ -12,6 +12,14 @@ Under the `src` folder, there is a `baccarat.py` file that calculates the probab
 
 ---
 
+## Authors
+
+- Jerick Liu (@jerickliu)
+- Omar Khattab (@okhat1)
+- Xuan Nguyen (@XuanNguyenCU)
+
+---
+
 ## Overview
 
 This program performs an **exact-enumeration** of all possible Baccarat hands in a **six-deck shoe**. It computes:
